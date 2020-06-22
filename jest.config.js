@@ -8,7 +8,9 @@ module.exports = {
   "collectCoverageFrom": [
     "src/**/*.{js,jsx,ts,tsx}",
     "!src/**/*.d.ts",
-    "!<rootDir>/node_modules/"
+    "!<rootDir>/node_modules/",
+    "!src/**/*.stories.ts",
+    "!<rootDir>/src/**/__stories__/**/*.{js,jsx,ts,tsx}"
   ],
   "coverageThreshold": {
     "global": {
