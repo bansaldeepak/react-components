@@ -6,6 +6,53 @@ import fetch from 'cross-fetch';
 import logo from './logo.svg';
 import './App.css';
 import { Form as FormComponent } from 'react-component-stack';
+import { Table as TableComponent } from 'react-component-stack';
+
+const tableData = {
+  columns: [
+    { name: 'name', label: 'Name', type: 'date', sort: true, filter: true },
+    {
+      name: 'status',
+      label: 'Status',
+      type: 'checkbox',
+      sort: true,
+      filter: true,
+      options: [
+        {
+          label: 'Draft',
+          value: 'Draft'
+        },
+        {
+          label: 'Ready',
+          value: 'Ready'
+        },
+        {
+          label: 'Published',
+          value: 'Published'
+        }
+      ]
+    },
+    { name: 'render', label: 'Render', type: 'render', render: () => 'Render' },
+    { name: 'expand', label: 'Expand', type: 'expand', render: () => 'Expand' }
+  ],
+  rows: [
+    {
+      "id":"1",
+      "name":"Draft Record",
+      "status":"Draft",
+    },
+    {
+      "id":"2",
+      "name":"Ready Record",
+      "status":"Ready"
+    },
+    {
+      "id":"3",
+      "name":"Published Record",
+      "status":"Published"
+    }
+  ]
+}
 
 
 function sleep(delay = 0) {
@@ -215,6 +262,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
       </header>
+      <TableComponent {...tableData} />
       <FormComponent
         novalidate={true}
         data={

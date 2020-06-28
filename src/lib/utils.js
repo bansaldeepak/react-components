@@ -1,18 +1,59 @@
+/**
+ * Check if value is defined.
+ *
+ * @param {Object} value any value.
+ * @returns {true|false}
+ */
 export const isDefined = (value) => value !== undefined;
 
+/**
+ * Check if value is empty.
+ *
+ * @param {Object} value any value.
+ * @returns {true|false}
+ */
 export const isEmpty = (value) =>
   value === undefined || value === null || value === "";
 
+/**
+ * Check if value is array.
+ *
+ * @param {Array} value any value.
+ * @returns {true|false}
+ */
 export const isArray = (value) => Array.isArray(value);
 
+/**
+ * Check if value is function.
+ *
+ * @param {Function} value any value.
+ * @returns {true|false}
+ */
 export const isFunction = (obj) => typeof obj === "function";
 
+/**
+ * Check if value is Object.
+ *
+ * @param {Object} object any value.
+ * @returns {true|false}
+ */
 export const isObject = (obj) => obj !== null && typeof obj === "object";
 
+/**
+ * Check if device is Mobile.
+ *
+ * @returns {true|false}
+ */
 export const isMobile = () => {
   return true;
 };
 
+/**
+ * Check if object is Promise.
+ *
+ * @param {Object} object any value.
+ * @returns {true|false}
+ */
 export const isPromise = (obj) => {
   return (
     !!obj &&
@@ -21,6 +62,13 @@ export const isPromise = (obj) => {
   );
 };
 
+/**
+ * Get Unique Array.
+ *
+ * @param {Array} Array of objects.
+ * @param {String} any object key to check unique.
+ * @returns {Array} of Unique Elements
+ */
 export const getUniqueArray = (itemArr, itemKey) => {
   const uniqueFields = itemArr
     .map((item) => (isDefined(item[itemKey]) && item[itemKey]) || item)
@@ -34,6 +82,13 @@ export const getUniqueArray = (itemArr, itemKey) => {
   return uniqueFields;
 };
 
+/**
+ * Run function for any given times.
+ *
+ * @param {Integer} Count to run the loop.
+ * @param {Function} Function which needs to be executed.
+ * @returns {Array} Array of Iteratiosn
+ */
 export const times = (count, func) => {
   var i = 0,
     results = [];

@@ -8,24 +8,17 @@ import TableCell from "@material-ui/core/TableCell";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import Checkbox from "@material-ui/core/Checkbox";
+import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
-import Fab from "@material-ui/core/Fab";
 import Paper from "@material-ui/core/Paper";
-import Chip from "@material-ui/core/Chip";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Typography from "@material-ui/core/Typography";
-import Link from "@material-ui/core/Link";
 
-import {
-  Done,
-  Clear,
-  KeyboardArrowUp,
-  KeyboardArrowDown,
-} from "@material-ui/icons";
+import { KeyboardArrowUp, KeyboardArrowDown } from "@material-ui/icons";
 
 import TableHead from "./TableHead";
 import Titlebar from "./Titlebar";
-import Fliter from "./Fliter";
+import Filter from "./Filter";
 
 import { isDefined, isFunction } from "../lib/utils";
 
@@ -195,96 +188,6 @@ const EnhancedTable = (props) => {
 
     if (showCellData) {
       switch (cell.type) {
-        case "boolean":
-          cellData = cellData ? <Done /> : <Clear />;
-          break;
-        case "button":
-          cellData = [];
-          cell.buttons.map((button) => {
-            let buttonLink = "";
-            let showField = true;
-
-            if (button.beforeShow) {
-              showField = button.beforeShow(rowData);
-            }
-
-            if (button.getIcon) {
-              button["icon"] = button.getIcon(rowData[button.field]);
-            }
-
-            if (showField && button.link) {
-              buttonLink = button.link;
-              if (button.param) {
-                buttonLink = buttonLink + rowData[button.param];
-              }
-
-              if (isDefined(button.icon)) {
-                cellData.push(
-                  <IconButton
-                    aria-label={button.label}
-                    to={buttonLink}
-                    component={Link}
-                    key={rowData[uniqueKey] + button.label.replace(" ", "-")}
-                  >
-                    <button.icon />
-                  </IconButton>
-                );
-              } else {
-                cellData.push(
-                  <Chip
-                    label={button.label}
-                    to={buttonLink}
-                    component={Link}
-                    className={props.classes.chip}
-                    key={rowData[uniqueKey] + button.label.replace(" ", "-")}
-                  />
-                );
-              }
-            }
-
-            if (showField && button.action) {
-              if (!isDefined(button.icon)) {
-                cellData.push(
-                  <Chip
-                    label={button.label}
-                    onClick={() => button.action(rowData)}
-                    className={props.classes.chip}
-                    key={rowData[uniqueKey] + button.label.replace(" ", "-")}
-                    color={button.color}
-                    size={button.size}
-                    variant={button.variant}
-                  />
-                );
-              } else if (button.type === "fab") {
-                cellData.push(
-                  <Fab
-                    aria-label={button.label}
-                    onClick={() => button.action(rowData)}
-                    color={button.color}
-                    key={rowData[uniqueKey] + button.label.replace(" ", "-")}
-                    size={button.size}
-                    classes={button.classes}
-                  >
-                    <button.icon />
-                  </Fab>
-                );
-              } else {
-                cellData.push(
-                  <IconButton
-                    aria-label={button.label}
-                    onClick={() => button.action(rowData)}
-                    color={button.color}
-                    key={rowData[uniqueKey] + button.label.replace(" ", "-")}
-                  >
-                    <button.icon />
-                  </IconButton>
-                );
-              }
-            }
-
-            return "";
-          });
-          break;
         case "render":
           cellData = cell.render(rowData);
           break;
@@ -466,11 +369,20 @@ const EnhancedTable = (props) => {
                         })}
                   </TableRow>
 
-                  {isExpanded && expandColumn && expanded ? (
-                    <TableRow>
-                      <TableCell colSpan={columns.length}>{expanded}</TableCell>
-                    </TableRow>
-                  ) : null}
+                  <TableRow>
+                    <TableCell
+                      style={{ paddingBottom: 0, paddingTop: 0 }}
+                      colSpan={columns.length}
+                    >
+                      <Collapse
+                        in={isExpanded && expandColumn && expanded}
+                        timeout="auto"
+                        unmountOnExit
+                      >
+                        {expanded}
+                      </Collapse>
+                    </TableCell>
+                  </TableRow>
                 </React.Fragment>
               );
             })}

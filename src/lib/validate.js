@@ -30,15 +30,16 @@ const validateField = (fieldProps, value, formData) => {
         return !multipleFieldValidation.error;
       });
       errorMessage = errorFlag
-        ? type === "nested"
+        ? type === "section"
           ? `Please fill section details!`
-          : optionType.indexOf(type) > -1
-          ? `Please select an option!`
           : `Please enter a value!`
         : null;
     } else if (required) {
       errorFlag = true;
-      errorMessage = `Please fill section details!`;
+      errorMessage =
+        type === "section"
+          ? `Please fill section details!`
+          : `Please enter a value!`;
     }
   } else if (type === "section" && fields.length > 0) {
     errorFlag = !fields.every((sectionField) => {
@@ -70,11 +71,11 @@ const validateField = (fieldProps, value, formData) => {
         errorFlag = !validator.isEmail(value);
         break;
       case "url":
-        errorMessage = `Value must be a url`;
+        errorMessage = `Value must be a valid url`;
         errorFlag = !validator.isURL(value);
         break;
       case "decimal":
-        errorMessage = `Value must be a decimal`;
+        errorMessage = `Value must be a valid decimal`;
         errorFlag = !validator.isDecimal(value);
         break;
       case "boolean":
@@ -95,33 +96,33 @@ const validateField = (fieldProps, value, formData) => {
         }
         break;
       case "float":
-        errorMessage = `Value must be a float`;
-        errorFlag = !validator.isFloat(value);
         if (min !== undefined && max !== undefined) {
           errorMessage = `Value must be between ${min} and ${max}`;
-        }
-
-        if (min !== undefined && max === undefined) {
+          errorFlag = !validator.isFloat(value, { min, max });
+        } else if (min !== undefined && max === undefined) {
           errorMessage = `Value must be greater than ${min}`;
-        }
-
-        if (min === undefined && max !== undefined) {
+          errorFlag = !validator.isFloat(value, { min });
+        } else if (min === undefined && max !== undefined) {
           errorMessage = `Value must be less than ${max}`;
+          errorFlag = !validator.isFloat(value, { max });
+        } else {
+          errorMessage = `Value must be a float`;
+          errorFlag = !validator.isFloat(value);
         }
         break;
       case "integer":
-        errorMessage = `Value must be a integer`;
-        errorFlag = !validator.isInt(value, { min: min, max: max });
         if (min !== undefined && max !== undefined) {
           errorMessage = `Value must be between ${min} and ${max}`;
-        }
-
-        if (min !== undefined && max === undefined) {
+          errorFlag = !validator.isInt(value, { min, max });
+        } else if (min !== undefined && max === undefined) {
           errorMessage = `Value must be greater than ${min}`;
-        }
-
-        if (min === undefined && max !== undefined) {
+          errorFlag = !validator.isInt(value, { min });
+        } else if (min === undefined && max !== undefined) {
           errorMessage = `Value must be less than ${max}`;
+          errorFlag = !validator.isInt(value, { max });
+        } else {
+          errorMessage = `Value must be a integer`;
+          errorFlag = !validator.isInt(value);
         }
         break;
       default:
@@ -142,38 +143,29 @@ const validateField = (fieldProps, value, formData) => {
           }
         }
 
-        if (
-          !errorFlag &&
-          (min !== undefined || max !== undefined) &&
-          !validator.isInt(value.toString(), { min: min, max: max })
-        ) {
+        if (!errorFlag && (min !== undefined || max !== undefined)) {
           errorFlag = true;
-          errorMessage = `Value must be between ${min} and ${max}`;
           if (min !== undefined && max === undefined) {
             errorMessage = `Value must be greater than ${min}`;
-          }
-
-          if (min === undefined && max !== undefined) {
+            errorFlag = !validator.isInt(value.toString(), { min });
+          } else if (min === undefined && max !== undefined) {
             errorMessage = `Value must be less than ${max}`;
+            errorFlag = !validator.isInt(value.toString(), { max });
+          } else {
+            errorMessage = `Value must be between ${min} and ${max}`;
+            errorFlag = !validator.isInt(value.toString(), { min, max });
           }
         }
 
-        let re = pattern !== undefined ? pattern : "";
+        const re = pattern !== undefined ? pattern : "";
         if (!errorFlag && (re.length > 0 || typeof re === "object")) {
           errorFlag = !re.test(value);
           errorMessage = `Value does not match given pattern`;
         }
 
-        if (!errorFlag && validate) {
-          errorFlag = !(typeof validate === "function"
-            ? validate(formData)
-            : validate);
-          errorMessage = `Please provide right value.`;
-        }
-
-        if (!errorFlag && typeof error === "function") {
-          errorFlag = error(formData);
-          errorMessage = `Please provide right value.`;
+        if (!errorFlag && validate && typeof validate === "function") {
+          errorFlag = !validate(value, formData);
+          errorMessage = `Please provide valid value.`;
         }
         break;
     }
