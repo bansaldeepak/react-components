@@ -72,7 +72,7 @@ function App() {
 export default App;
 ```
 
-Form Nested Fields:
+Form Section Fields:
 
 ```js
 import React from 'react';
@@ -84,7 +84,7 @@ import { Form as FormComponent } from 'react-component-stack';
 const fields = [
   {
     name: 'address',
-    type: 'nested',
+    type: 'section',
     label: 'Address',
     required: true,
     fields: [
@@ -128,7 +128,7 @@ const fields = [
   },
   {
     name: 'list',
-    type: 'nested',
+    type: 'section',
     label: 'List',
     required: true,
     multiple: true,
