@@ -77,4 +77,36 @@ describe("Field", () => {
     // expect(wrapper.find("input").at(1).prop("defaultValue")).toEqual("Text 2");
     expect(wrapper.find("input").at(1).prop("type")).toEqual("text");
   });
+
+  it("Should capture value correctly onChange", () => {
+    const wrapper = mount(
+      <StoreProvider>
+        <Field
+          name="text-multiple"
+          type="text"
+          multiple={true}
+          defaultValue={["Text 1", "Text 2"]}
+        />
+      </StoreProvider>
+    );
+
+    expect(wrapper.find("input").length).toBe(2);
+    expect(wrapper.find("input").at(0).prop("name")).toEqual("text-multiple.0");
+    expect(wrapper.find("input").at(0).prop("type")).toEqual("text");
+    expect(wrapper.find("input").at(1).prop("name")).toEqual("text-multiple.1");
+    expect(wrapper.find("input").at(1).prop("type")).toEqual("text");
+
+    wrapper.find(".add-field").at(0).find(".MuiSvgIcon-root").simulate("click");
+    wrapper
+      .find(".remove-field")
+      .at(2)
+      .find(".MuiSvgIcon-root")
+      .simulate("click");
+    wrapper
+      .find(".remove-field")
+      .at(0)
+      .find(".MuiSvgIcon-root")
+      .simulate("click");
+    expect(wrapper.find(".remove-field").length).toBe(0);
+  });
 });

@@ -9,6 +9,13 @@ import { StoreProvider } from "../../lib";
 configure({ adapter: new Adapter() });
 
 describe("Field/Autocomplete", () => {
+  const setState = jest.fn();
+  const useStateSpy = jest.spyOn(React, "useState");
+  useStateSpy.mockImplementation((init) => [init, setState]);
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
   // {
   //   name: 'autocomplete', type: 'autocomplete', label: 'Autocomplete with dynamic list', required: true, options: (async (brandData) => {
   //     if (brandData) {
@@ -54,5 +61,37 @@ describe("Field/Autocomplete", () => {
       </StoreProvider>
     );
     expect(wrapper.find("input").length).toBe(1);
+  });
+
+  it("autocomplete onchange", function () {
+    const wrapper = mount(
+      <StoreProvider>
+        <Field
+          name="autocomplete"
+          type="autocomplete"
+          options={["Opt1", "Opt2", "Opt3", "Opt4", "Opt5"]}
+        />
+      </StoreProvider>,
+      { attachTo: document.body }
+    );
+
+    expect(wrapper.find("input").length).toBe(1);
+    const autocomplete = wrapper.find("input").at(0);
+    autocomplete.simulate("change", { target: { value: "opt" } });
+
+    console.log(
+      "MuiAutocomplete-popper",
+      wrapper.find(".MuiAutocomplete-popper").length
+    );
+    console.log(
+      "MuiAutocomplete-option",
+      wrapper.find(".MuiAutocomplete-option").length
+    );
+    console.log(
+      "MuiAutocomplete-option",
+      document.getElementsByClassName("MuiAutocomplete-option").length
+    );
+    // expect(setState).toHaveBeenCalledWith("Checkbox 1");
+    // expect(setState).toHaveBeenCalledTimes(2);
   });
 });

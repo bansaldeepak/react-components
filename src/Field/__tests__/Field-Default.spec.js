@@ -9,6 +9,14 @@ import { StoreProvider } from "../../lib";
 configure({ adapter: new Adapter() });
 
 describe("Field/Default", () => {
+  const setState = jest.fn();
+  const useStateSpy = jest.spyOn(React, "useState");
+  useStateSpy.mockImplementation((init) => [init, setState]);
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   // {name: 'text', label: 'Text', placeholder: 'Text', required: true},
   it("snapshot testing", () => {
     const component = shallow(<Field name="default" />);
@@ -118,5 +126,56 @@ describe("Field/Default", () => {
     expect(wrapper.find("input").at(1).prop("name")).toEqual("default.1");
     // expect(wrapper.find("input").at(1).prop("defaultValue")).toEqual("Text 2");
     expect(wrapper.find("input").at(1).prop("type")).toEqual("text");
+  });
+
+  it("Should capture value correctly onError", () => {
+    let fieldError;
+    const wrapper = mount(
+      <StoreProvider>
+        <Field
+          name="default"
+          description="This is default field"
+          type="text"
+          minlength="5"
+          maxlength="10"
+          required={true}
+          onError={(error) => {
+            fieldError = error;
+          }}
+        />
+      </StoreProvider>
+    );
+
+    expect(wrapper.find("input").length).toBe(1);
+    const field = wrapper.find("input").at(0);
+    // field.instance().value = 'Test 1';
+    field.simulate("change", { target: { value: "Test 1" } });
+    field.simulate("blur");
+    expect(setState).toHaveBeenCalledWith("Test 1");
+    expect(setState).toHaveBeenCalledTimes(1);
+  });
+
+  it("Should capture value correctly onChange", () => {
+    let fieldValue;
+    const wrapper = mount(
+      <StoreProvider>
+        <Field
+          name="default"
+          description="This is default field"
+          defaultValue="Default Value"
+          type="text"
+          minlength="5"
+          maxlength="20"
+          required={true}
+          onChange={(value) => {
+            fieldValue = value;
+          }}
+        />
+      </StoreProvider>
+    );
+
+    expect(wrapper.find("input").length).toBe(1);
+    const field = wrapper.find("input").at(0);
+    field.simulate("blur");
   });
 });

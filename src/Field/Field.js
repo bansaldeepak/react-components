@@ -178,6 +178,7 @@ const ArrayField = (props) => {
   return (
     <>
       <Grid
+        className="add-field"
         style={{
           display: "flex",
           justifyContent: "space-between",
@@ -231,6 +232,7 @@ const ArrayField = (props) => {
                   justifyContent: "flex-end",
                   padding: "8px",
                 }}
+                className="remove-field"
               >
                 <RemoveCircle
                   onClick={(event) => {
@@ -265,7 +267,11 @@ const Field = (props) => {
     onError,
   } = props;
 
-  // use store
+  /**
+   * useStore - get form & formDispatch
+   * form : form fields and values
+   * formDispatch: dispatcher
+   */
   const { form, formDispatch } = useStore();
   const fieldValues = form.values;
   const formErrors = form.errors;
@@ -276,16 +282,20 @@ const Field = (props) => {
   const arrayType = ["select", "checkbox"];
 
   let field = "";
-  let fieldOptions = options || [];
+  let fieldOptions;
   let fieldValue = defaultValue;
   let fieldType = type;
+  let fieldKey = `field-${fieldType}-${name}`;
 
   if (isFunction(options)) {
     (async () => {
       fieldOptions = await options(fieldValue, fieldValues);
     })();
+  } else {
+    fieldOptions = options || [];
   }
 
+  const fieldErrorName = `${name}-error-text`;
   if (!isDefined(type)) {
     if (isArray(fieldOptions) && fieldOptions.length > 0) {
       if (multiple) {
@@ -298,10 +308,10 @@ const Field = (props) => {
     } else {
       fieldType = "text";
     }
+
+    fieldKey = `field-${fieldType}-${name}`;
   }
 
-  const fieldErrorName = `${name}-error-text`;
-  const fieldKey = `field-${fieldType}-${name}`;
   if (isDefined(valueFromJson)) {
     fieldValue = isFunction(valueFromJson)
       ? valueFromJson(fieldValues)
@@ -386,7 +396,8 @@ const Field = (props) => {
   };
 
   /**
-   * Update properties to handle undefined type, key, fieldValues, and add handleChange function
+   * Update properties to handle undefined type, key, fieldValues,
+   * and add handleChange function
    */
   const updatedProps = {
     ...props,

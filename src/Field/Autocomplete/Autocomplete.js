@@ -12,15 +12,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+import { isEmpty } from "../../lib";
+
 const EnhancedAutocomplete = (props) => {
   const classes = useStyles();
-  const { minlength, key, name, optionKey, optionValue, handleChange } = props;
+  const {
+    minlength,
+    key,
+    name,
+    optionKey,
+    optionValue,
+    defaultValue,
+    handleChange,
+  } = props;
+
   const [open, setOpen] = React.useState(false);
   const [options, setOptions] = React.useState([]);
   const [value, setValue] = React.useState();
   // const loading = open && options.length === 0;
   const loading = open;
-
   React.useEffect(() => {
     let active = true;
 
@@ -31,18 +41,16 @@ const EnhancedAutocomplete = (props) => {
     (async () => {
       let resultOptions = [];
       if (typeof props.options === "object") {
-        if (value) {
+        if (!isEmpty(value)) {
           resultOptions = props.options.filter((obj) => {
-            return Object.keys(obj).reduce((acc, curr) => {
-              return acc || obj[curr].toLowerCase().includes(value);
-            }, false);
+            return obj.toLowerCase().includes(value.toLowerCase());
           });
         } else {
           resultOptions = props.options;
         }
       } else if (typeof props.options === "function") {
         if (value && value.length >= minlength) {
-          resultOptions = await props.options(value);
+          resultOptions = await props.options(value.toLowerCase());
         }
       }
 
@@ -61,6 +69,7 @@ const EnhancedAutocomplete = (props) => {
       key={key}
       name={name}
       open={open}
+      defaultValue={defaultValue}
       onOpen={() => {
         setOpen(true);
       }}
@@ -68,14 +77,15 @@ const EnhancedAutocomplete = (props) => {
         setOpen(false);
       }}
       onChange={(event, value) => {
-        const selectedValue =
-          value[optionKey] ||
-          value[name] ||
-          value.id ||
-          value.key ||
-          value.value ||
-          value.name ||
-          value;
+        const selectedValue = !isEmpty(value)
+          ? value[optionKey] ||
+            value[name] ||
+            value.id ||
+            value.key ||
+            value.value ||
+            value.name ||
+            value
+          : "";
         handleChange(selectedValue);
       }}
       getOptionSelected={(option, selected) =>
@@ -146,6 +156,10 @@ EnhancedAutocomplete.propTypes = {
   optionKey: PropTypes.string,
   optionValue: PropTypes.string,
   handleChange: PropTypes.func,
+  /**
+   * Default value for the field
+   */
+  defaultValue: PropTypes.string,
 };
 
 EnhancedAutocomplete.defaultProps = {
@@ -154,6 +168,7 @@ EnhancedAutocomplete.defaultProps = {
   optionKey: "key",
   optionValue: "value",
   handleChange: () => {},
+  defaultValue: "",
 };
 
 export default EnhancedAutocomplete;

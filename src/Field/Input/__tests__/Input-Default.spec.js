@@ -8,6 +8,10 @@ import Input from "../Input";
 Enzyme.configure({ adapter: new Adapter() });
 
 describe("Input/Default", () => {
+  const setState = jest.fn();
+  const useStateSpy = jest.spyOn(React, "useState");
+  useStateSpy.mockImplementation((init) => [init, setState]);
+
   it("snapshot testing", () => {
     const component = shallow(
       <Input
@@ -44,5 +48,16 @@ describe("Input/Default", () => {
     expect(wrapper.find("input").prop("defaultValue")).toEqual(
       "textDefaultValue"
     );
+  });
+
+  it("Should capture value correctly onChange", () => {
+    const wrapper = mount(
+      <Input name="text" type="text" defaultValue="textDefaultValue" />
+    );
+    const input = wrapper.find("input").at(0);
+    input.instance().value = "New Value";
+    input.simulate("change");
+    expect(setState).toHaveBeenCalledWith("New Value");
+    expect(setState).toHaveBeenCalledTimes(1);
   });
 });

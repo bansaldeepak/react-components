@@ -97,16 +97,20 @@ const EnhancedForm = (props) => {
   const { form, formDispatch } = useStore();
   const fieldValues = form.values;
   const formFields = form.fields;
+
   React.useEffect(() => {
     (async () => {
+      const initialFieldValues = isFunction(initialFormData)
+        ? await initialFormData()
+        : initialFormData;
+
       const defaultFieldValue = fields.reduce(
         defaultDataReducer,
-        initialFormData
+        initialFieldValues
       );
-      var formInitialValues = { ...defaultFieldValue, ...initialFormData };
-      if (isFunction(initialFormData)) {
-        formInitialValues = await initialFormData();
-      }
+
+      const formInitialValues = { ...defaultFieldValue, ...initialFieldValues };
+
       formDispatch({
         type: "SET_INITIAL_FORM",
         payload: {

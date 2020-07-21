@@ -41,7 +41,6 @@ const EnhancedSelect = (props) => {
   } = props;
 
   const [options, setOptions] = React.useState(defaultOptions);
-  const [localValue, setLocalValue] = React.useState(defaultValue);
   const loading = options.length === 0;
 
   React.useEffect(() => {
@@ -56,7 +55,7 @@ const EnhancedSelect = (props) => {
       if (typeof props.options === "object") {
         resultOptions = props.options;
       } else if (typeof props.options === "function") {
-        resultOptions = await props.options(localValue);
+        resultOptions = await props.options(defaultValue);
       }
 
       if (active) {
@@ -105,9 +104,9 @@ const EnhancedSelect = (props) => {
       }}
       InputLabelProps={{
         shrink:
-          localValue !== undefined &&
-          localValue !== null &&
-          localValue !== "" &&
+          defaultValue !== undefined &&
+          defaultValue !== null &&
+          defaultValue !== "" &&
           props.prefix,
       }}
       SelectProps={{
@@ -162,14 +161,53 @@ const EnhancedSelect = (props) => {
   );
 };
 
-EnhancedSelect.defaultProps = {
-  multiple: false,
-  defaultValue: "",
-};
-
 EnhancedSelect.propTypes = {
   classes: PropTypes.object.isRequired,
-  defaultValue: PropTypes.string,
+  /**
+   * Name of the field to get the value.
+   */
+  name: PropTypes.string.isRequired,
+  /**
+   * Default value for multiple is false it can be true if type is select
+   */
+  multiple: PropTypes.bool,
+  /**
+   * Default Value can be array of string or object
+   */
+  defaultValue: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string),
+  ]),
+  /**
+   * Options can be function & array of string/object
+   */
+  options: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.arrayOf(PropTypes.string),
+    PropTypes.arrayOf(PropTypes.shape({})),
+  ]),
+  /**
+   * Default Options can be array of string or object
+   */
+  defaultOptions: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.string),
+    PropTypes.arrayOf(PropTypes.shape({})),
+  ]),
+  /**
+   * Callback fired when value changed.
+   *
+   * @param value of the field.
+   * You can pull out the new error & errorMessage by accessing `error.error` (bool) and `error.errorMessage` (string).
+   */
+  handleChange: PropTypes.func,
+};
+
+EnhancedSelect.defaultProps = {
+  multiple: false,
+  defaultOptions: [],
+  options: [],
+  handleChange: () => {},
+  defaultValue: "",
 };
 
 export default withStyles(styles, { withTheme: true })(EnhancedSelect);

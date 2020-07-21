@@ -8,6 +8,14 @@ import Number from "../Number";
 configure({ adapter: new Adapter() });
 
 describe("Number/Default", () => {
+  const setState = jest.fn();
+  const useStateSpy = jest.spyOn(React, "useState");
+  useStateSpy.mockImplementation((init) => [init, setState]);
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it("snapshot testing", () => {
     const component = shallow(<Number name="default-type-number" />);
     const tree = shallowToJson(component);
@@ -28,5 +36,30 @@ describe("Number/Default", () => {
     expect(wrapper.find("input").length).toBe(1);
     expect(wrapper.find("input").prop("defaultValue")).toEqual(10);
     expect(wrapper.find("input").prop("type")).toEqual("number");
+  });
+
+  it("Should capture value correctly onChange", () => {
+    const wrapper = mount(
+      <Number
+        name="default-type-number"
+        defaultValue={10}
+        prefix="P"
+        suffix="S"
+        readonly={() => false}
+        disabled={() => false}
+        title={() => "Test"}
+        min={() => 10}
+        max={() => 100}
+        step={() => 1}
+        pattern={() => "[0-9]"}
+        maxlength={() => 10}
+        minlength={() => 1}
+      />
+    );
+    const number = wrapper.find("input").at(0);
+    number.instance().value = 2;
+    number.simulate("change");
+    expect(setState).toHaveBeenCalledWith("2");
+    expect(setState).toHaveBeenCalledTimes(1);
   });
 });

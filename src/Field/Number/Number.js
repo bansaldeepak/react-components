@@ -12,35 +12,11 @@ const useStyles = makeStyles((theme) => ({
 
 const EnhancedNumber = (props) => {
   const classes = useStyles();
-  const { type, defaultValue, step, handleChange } = props;
+  const { type, defaultValue, step, handleChange, fieldValues } = props;
 
   const [localValue, setLocalValue] = React.useState(defaultValue);
 
-  const checkFormat = (type, value, pattern) => {
-    if (value.length > 0) {
-      let re = "";
-      switch (type) {
-        case "tel":
-          re = pattern ? pattern : /^[0-9\b]+$/;
-          break;
-        default:
-          re = pattern ? pattern : "";
-          break;
-      }
-
-      return re.length > 0 || typeof re === "object" ? re.test(value) : true;
-    } else {
-      return true;
-    }
-  };
-
   const handleOnChange = (value) => {
-    // const { name, value, step } = event.target;
-
-    // if (type === 'tel') {
-    //   formatFlag = checkFormat(type, value);
-    // }
-
     let fieldValue = value;
     if (fieldValue !== "" && !Number.isNaN(fieldValue)) {
       if (step && Number.isInteger(step)) {
@@ -83,11 +59,11 @@ const EnhancedNumber = (props) => {
       InputProps={{
         disabled:
           typeof props.disabled === "function"
-            ? props.disabled(data)
+            ? props.disabled(fieldValues)
             : props.disabled,
         readOnly:
           typeof props.readonly === "function"
-            ? props.readonly(data)
+            ? props.readonly(fieldValues)
             : props.readonly,
         startAdornment: props.prefix ? (
           <InputAdornment position="start">{props.prefix}</InputAdornment>
@@ -97,22 +73,32 @@ const EnhancedNumber = (props) => {
         ) : null,
         inputProps: {
           title:
-            typeof props.title === "function" ? props.title(data) : props.title,
-          min: typeof props.min === "function" ? props.min(data) : props.min,
-          max: typeof props.max === "function" ? props.max(data) : props.max,
+            typeof props.title === "function"
+              ? props.title(fieldValues)
+              : props.title,
+          min:
+            typeof props.min === "function"
+              ? props.min(fieldValues)
+              : props.min,
+          max:
+            typeof props.max === "function"
+              ? props.max(fieldValues)
+              : props.max,
           maxLength:
             typeof props.maxlength === "function"
-              ? props.maxlength(data)
+              ? props.maxlength(fieldValues)
               : props.maxlength,
           minLength:
             typeof props.minlength === "function"
-              ? props.minlength(data)
+              ? props.minlength(fieldValues)
               : props.minlength,
           step:
-            typeof props.step === "function" ? props.step(data) : props.step,
+            typeof props.step === "function"
+              ? props.step(fieldValues)
+              : props.step,
           pattern:
             typeof props.pattern === "function"
-              ? props.pattern(data)
+              ? props.pattern(fieldValues)
               : props.pattern,
         },
       }}
