@@ -171,7 +171,7 @@ describe("validate/date", () => {
   it("True Case 2", () => {
     const { error } = validate({ type: "date" }, "2020/06/28");
 
-    expect(error).toBe(false);
+    expect(error).toBe(true);
   });
 });
 

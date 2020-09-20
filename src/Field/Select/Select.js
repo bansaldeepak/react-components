@@ -206,7 +206,7 @@ EnhancedSelect.defaultProps = {
   multiple: false,
   defaultOptions: [],
   options: [],
-  handleChange: () => {},
+  handleChange: (value) => {},
   defaultValue: "",
 };
 

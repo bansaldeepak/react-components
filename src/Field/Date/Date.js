@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import MomentUtils from "@date-io/moment";
 import { MuiPickersUtilsProvider, DatePicker } from "@material-ui/pickers";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import moment from "moment";
 
 // import { getInputProps } from '../lib';
 const useStyles = makeStyles((theme) => ({
@@ -47,6 +48,14 @@ const EnhancedDate = (props) => {
   // More properties handled in useEffect
   // format, disablePast, disableFuture, disableDate, openTo, min, max, readonly, maxlength, minlength, step
 
+  const [localValue, setLocalValue] = React.useState();
+
+  React.useEffect(() => {
+    if (localValue) {
+      handleChange(localValue.format(format || "DD/MM/YYYY"));
+    }
+  }, [localValue]);
+
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
       <DatePicker
@@ -55,15 +64,16 @@ const EnhancedDate = (props) => {
         label={label}
         placeholder={placeholder}
         className={classes.textField}
-        defaultValue={defaultValue}
-        openTo={openTo !== undefined ? openTo : "date"}
+        defaultValue={moment(defaultValue, format || "DD/MM/YYYY")}
+        value={moment(defaultValue, format || "DD/MM/YYYY")}
+        openTo={openTo}
         views={["year", "month", "date"]}
-        onChange={(date) => handleChange(date)}
+        onChange={setLocalValue}
         margin="normal"
-        format={format !== undefined ? format : "DD/MM/YYYY"}
+        format={format}
         required={required}
         disabled={disabled}
-        disablePast={disablePast !== undefined ? disablePast : false}
+        disablePast={disablePast}
         shouldDisableDate={
           typeof disableDate === "function"
             ? (day) => {
@@ -71,7 +81,7 @@ const EnhancedDate = (props) => {
               }
             : null
         }
-        disableFuture={disableFuture !== undefined ? disableFuture : false}
+        disableFuture={disableFuture}
         helperText={typeof helptext === "function" ? helptext(data) : helptext}
         minDate={typeof min === "function" ? min(data) : min}
         maxDate={typeof max === "function" ? max(data) : max}
@@ -86,13 +96,6 @@ const EnhancedDate = (props) => {
           ) : null,
           inputProps: {
             title: typeof title === "function" ? title(data) : title,
-            min: typeof min === "function" ? min(data) : min,
-            max: typeof max === "function" ? max(data) : max,
-            maxLength:
-              typeof maxlength === "function" ? maxlength(data) : maxlength,
-            minLength:
-              typeof minlength === "function" ? minlength(data) : minlength,
-            step: typeof step === "function" ? step(data) : step,
           },
         }}
       />
@@ -105,10 +108,48 @@ EnhancedDate.propTypes = {
    * Default value for the field
    */
   defaultValue: PropTypes.string,
+  /**
+   * Callback fired when value changed.
+   *
+   * @param value of the field.
+   * You can pull out the new error & errorMessage by accessing `error.error` (bool) and `error.errorMessage` (string).
+   */
+  handleChange: PropTypes.func,
+  /**
+   * OpenTo for default calendar view
+   */
+  openTo: PropTypes.string,
+  /**
+   * format of the date
+   */
+  format: PropTypes.string,
+  /**
+   * required property for date
+   */
+  required: PropTypes.bool,
+  /**
+   * disabled property for date
+   */
+  disabled: PropTypes.bool,
+  /**
+   * disablePast property for date
+   */
+  disablePast: PropTypes.bool,
+  /**
+   * disableFuture property for date
+   */
+  disableFuture: PropTypes.bool,
 };
 
 EnhancedDate.defaultProps = {
   defaultValue: null,
+  handleChange: (value) => {},
+  openTo: "date",
+  format: "DD/MM/YYYY",
+  required: false,
+  disabled: false,
+  disablePast: false,
+  disableFuture: false,
 };
 
 export default EnhancedDate;

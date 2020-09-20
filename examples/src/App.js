@@ -83,7 +83,7 @@ const fields = [
     // }), 
     // optionKey: 'country', optionValue: 'name'
   },
-  // {name: 'date', type: 'date', label: 'Date', placeholder: 'Date', required: true},
+  {name: 'date', type: 'date', label: 'Date', placeholder: 'Date', required: true},
   // {name: 'text', type: 'text', label: 'Text', placeholder: 'Text', required: true, description: 'This is text field'},
   // {name: 'email', type: 'email', label: 'Email', placeholder: 'Email', required: true},
   // {name: 'url', type: 'url', label: 'URL', placeholder: 'URL', required: true},

@@ -92,7 +92,7 @@ const validateField = (fieldProps, value, formData) => {
         if (fieldProps.format) {
           errorFlag = !validator.isDate(value, fieldProps.format);
         } else {
-          errorFlag = !validator.isDate(value);
+          errorFlag = !validator.isDate(value, "DD/MM/YYYY");
         }
         break;
       case "float":
