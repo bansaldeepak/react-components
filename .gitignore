@@ -1,5 +1,11 @@
 /node_modules
-
-/example
-/docs
 /dist
+
+*node_modules/*
+*dist/*
+*build/*
+.vscode/*
+/coverage
+**.snap
+/storybook-static
+**.tgz
