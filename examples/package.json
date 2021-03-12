@@ -51,7 +51,7 @@
     "react": "^16.12.0",
     "react-app-polyfill": "^1.0.6",
     "react-component-stack": "^1.0.3",
-    "react-dev-utils": "^10.2.1",
+    "react-dev-utils": "^11.0.4",
     "react-device-detect": "^1.6.2",
     "react-dom": "^16.12.0",
     "resolve": "1.15.0",
