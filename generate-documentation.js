@@ -59,7 +59,7 @@ function filewalker(dir, done) {
     if (err) return done(err);
     let pending = list.length;
     if (!pending) return done(null, results);
-    list.forEach(file => {
+    list.forEach((file) => {
       file = path.resolve(dir, file);
       fs.stat(file, async (err, stat) => {
         // If directory, execute a recursive call
@@ -76,7 +76,7 @@ function filewalker(dir, done) {
             !file.endsWith(".story.js") &&
             !file.endsWith(".test.js")
           ) {
-            await new Promise(resolve => {
+            await new Promise((resolve) => {
               loadComponent(file, resolve);
             });
             await results.push(file);

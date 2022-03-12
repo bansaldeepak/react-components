@@ -12,16 +12,8 @@ const useStyles = makeStyles((theme) => ({
 
 const EnhancedRange = (props) => {
   const classes = useStyles();
-  const {
-    key,
-    name,
-    min,
-    step,
-    max,
-    defaultValue,
-    fieldValues,
-    handleChange,
-  } = props;
+  const { key, name, min, step, max, defaultValue, fieldValues, handleChange } =
+    props;
 
   // const { decimal } = props;
   // if (type === 'range') {

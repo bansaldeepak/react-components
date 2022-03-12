@@ -60,15 +60,8 @@ const useStyles = makeStyles((theme) => ({
 
 const EnhancedTableTitlebar = (props) => {
   const classes = useStyles();
-  const {
-    title,
-    data,
-    content,
-    numSelected,
-    actions,
-    selectable,
-    ...other
-  } = props;
+  const { title, data, content, numSelected, actions, selectable, ...other } =
+    props;
 
   return (
     <Toolbar

@@ -13,15 +13,8 @@ const styles = (theme) => ({
 });
 
 const EnhancedInput = (props) => {
-  const {
-    type,
-    name,
-    key,
-    fieldValues,
-    handleChange,
-    classes,
-    defaultValue,
-  } = props;
+  const { type, name, key, fieldValues, handleChange, classes, defaultValue } =
+    props;
 
   const [localValue, setLocalValue] = React.useState(defaultValue);
 

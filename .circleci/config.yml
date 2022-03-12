@@ -86,13 +86,13 @@ jobs:
           name: Generate PropTypes
           command: yarn proptypes --disable-cache
       - run:
-          name: '`yarn proptypes` changes committed?'
+          name: "`yarn proptypes` changes committed?"
           command: git diff --exit-code
       - run:
           name: Can we generate the documentation?
           command: yarn build-storybook:docs
       - run:
-          name: '`yarn build-storybook:docs` changes committed?'
+          name: "`yarn build-storybook:docs` changes committed?"
           command: git diff --exit-code
       - run:
           name: Check if yarn prettier was run
@@ -107,7 +107,7 @@ workflows:
       - checkout:
           filters:
             branches:
-              ignore: 
+              ignore:
                 - l10n
                 - /dependabot\//
       - test_unit:

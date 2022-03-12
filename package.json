@@ -18,7 +18,7 @@
     "coverage-summary": "cross-env istanbul report --root ./ --include reports/coverage/coverage-final.json --dir ./reports json-summary",
     "build": "rollup -c",
     "start": "rollup -c -w",
-    "prepare": "npm run build",
+    "prepare": "husky install",
     "predeploy": "cd example && npm install && npm run build",
     "deploy": "gh-pages -d example/build",
     "eslint": "cross-env eslint 'src/**/*.js' 'src/**/*.jsx'",
@@ -61,6 +61,9 @@
     "@storybook/addons": "^5.3.19",
     "@storybook/react": "^5.3.19",
     "@svgr/rollup": "^2.4.1",
+    "@testing-library/react": "^12.1.4",
+    "@typescript-eslint/eslint-plugin": "^5.14.0",
+    "@typescript-eslint/parser": "^5.14.0",
     "autoprefixer": "^9.8.0",
     "babel-core": "^7.0.0-beta.41",
     "babel-eslint": "^10.1.0",
@@ -75,6 +78,7 @@
     "enzyme-adapter-react-16": "^1.15.2",
     "enzyme-to-json": "^3.4.4",
     "eslint": "^6.7.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard": "^11.0.0",
     "eslint-config-standard-react": "^6.0.0",
     "eslint-plugin-import": "^2.13.0",
@@ -85,12 +89,12 @@
     "eslint-plugin-standard": "^3.1.0",
     "fs": "0.0.1-security",
     "gh-pages": "^1.2.0",
-    "husky": "^4.2.5",
+    "husky": "^7.0.4",
     "jest": "^24.9.0",
-    "lint-staged": "^10.2.6",
+    "lint-staged": "^12.3.5",
     "moment": "^2.26.0",
     "path": "^0.12.7",
-    "prettier": "^2.0.5",
+    "prettier": "2.5.1",
     "react": "^16.12.0",
     "react-docgen": "^4.1.1",
     "react-dom": "^16.12.0",
@@ -103,7 +107,8 @@
     "rollup-plugin-peer-deps-external": "^2.2.0",
     "rollup-plugin-postcss": "^1.6.2",
     "rollup-plugin-url": "^1.4.0",
-    "source-map-explorer": "^2.4.2"
+    "source-map-explorer": "^2.4.2",
+    "typescript": "^4.6.2"
   },
   "husky": {
     "hooks": {
@@ -112,7 +117,7 @@
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
-      "prettier --write"
+      "prettier --write --ignore-unknown"
     ]
   },
   "files": [
